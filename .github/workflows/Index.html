@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Probabilidade</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #1d4ed8;
+            --accent: #8b5cf6;
+            --background: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .lab-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary);
+        }
+
+        .lab-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .lab-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .experiment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .experiment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .experiment-panel {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .simulation-interface {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .probability-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .probability-reel {
+            width: 70px;
+            height: 90px;
+            background: linear-gradient(145deg, #475569, #334155);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 2px solid var(--accent);
+            color: white;
+        }
+
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-lab {
+            padding: 14px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-lab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .data-panel {
+            background: var(--card);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .metric-card {
+            padding: 20px;
+            background: var(--background);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .metric-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .analysis-section {
+            margin-top: 30px;
+        }
+
+        .hypothesis-box {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--warning);
+            margin-bottom: 20px;
+        }
+
+        .observation-log {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .theory-panel {
+            grid-column: 1 / -1;
+            background: var(--card);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .concept-card {
+            padding: 25px;
+            background: var(--background);
+            border-radius: 10px;
+            border-top: 4px solid var(--primary);
+        }
+
+        .concept-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .formula {
+            background: #1e293b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .positive { color: var(--success); }
+        .negative { color: var(--danger); }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="lab-header">
+            <h1 class="lab-title">🔬 Laboratório de Probabilidade Aplicada</h1>
+            <p class="lab-subtitle">Experimente a Lei dos Grandes Números em tempo real</p>
+        </div>
+
+        <div class="experiment-grid">
+            <div class="experiment-panel">
+                <div class="panel-title">🧪 Interface Experimental</div>
+                <div class="simulation-interface">
+                    <div style="color: white; margin-bottom: 20px;">Simulador de Máquina Caça-Níqueis</div>
+                    
+                    <div class="probability-display">
+                        <div class="probability-reel" id="reel1">🎲</div>
+                        <div class="probability-reel" id="reel2">🎲</div>
+                        <div class="probability-reel" id="reel3">🎲</div>
+                    </div>
+
+                    <div class="control-panel">
+                        <button class="btn-lab" onclick="playSingle()">1 Experimento</button>
+                        <button class="btn-lab" onclick="playMultiple(10)">10 Experimentos</button>
+                        <button class="btn-lab" onclick="playMultiple(100)">100 Experimentos</button>
+                        <button class="btn-lab" onclick="resetGame()">Reiniciar</button>
+                    </div>
+                </div>
+
+                <div class="analysis-section">
+                    <div class="hypothesis-box">
+                        <strong>Hipótese Científica:</strong> O Valor Esperado negativo se manifestará através da Lei dos Grandes Números após repetições suficientes do experimento.
+                    </div>
+
+                    <div class="observation-log" id="observationLog">
+                        <div class="log-entry">▶️ Experimento iniciado. Execute algumas jogadas para coletar dados...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="experiment-panel data-panel">
+                <div class="panel-title">📊 Métricas do Experimento</div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div>Saldo do Pesquisador</div>
+                        <div class="metric-value" id="balance">R$ 100,00</div>
+                        <small>Recursos disponíveis</small>
+                    </div>
+                    <div class="metric-card">
+                        <div>Iterações</div>
+                        <div class="metric-value" id="totalPlays">0</div>
+                        <small>Número de experimentos</small>
+                    </div>
+                    <div class="metric-card">
+                        <div>Valor Esperado Real</div>
+                        <div class="metric-value" id="balancePerPlay">R$ 0,00</div>
+                        <small>Média por experimento</small>
+                    </div>
+                    <div class="metric-card">
+                        <div>Eficiência</div>
+                        <div class="metric-value" id="efficiency">0%</div>
+                        <small>Desempenho vs. Teórico</small>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <canvas id="resultsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="theory-panel">
+            <div class="panel-title">📚 Fundamentos Teóricos</div>
+            <div class="theory-grid">
+                <div class="concept-card">
+                    <div class="concept-title">Lei dos Grandes Números</div>
+                    <p>À medida que o número de experimentos aumenta, a média dos resultados observados converge para o valor esperado teórico.</p>
+                    <div class="formula">lim[n→∞] (Sₙ/n) = μ</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-title">Valor Esperado (VE)</div>
+                    <p>Média ponderada de todos os resultados possíveis, considerando suas probabilidades.</p>
+                    <div class="formula">E[X] = Σ [xᵢ × P(xᵢ)]</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-title">Probabilidades Configuradas</div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Jackpot: 0.5% (30× prêmio)</li>
+                        <li>Vitória Grande: 2% (10× prêmio)</li>
+                        <li>Vitória Pequena: 15% (2× prêmio)</li>
+                        <li>Prejuízo: 82.5% (perde aposta)</li>
+                    </ul>
+                    <div class="formula">VE = (0.005×30 + 0.02×10 + 0.15×2 + 0.825×0) - 1 = -0.325</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração inicial - PROBABILIDADES MAIS REALISTAS
+        let balance = 100.00;
+        let totalPlays = 0;
+        let wins = 0;
+        let losses = 0;
+        let balanceHistory = [100];
+        let playHistory = [0];
+
+        // PROBABILIDADES MAIS REALISTAS - Valor Esperado negativo significativo
+        const probabilities = {
+            'jackpot': 0.005,    // 0.5% de chance
+            'bigWin': 0.02,      // 2% de chance
+            'smallWin': 0.15,    // 15% de chance
+            'loss': 0.825        // 82.5% de chance - PERDA
+        };
+
+        const payouts = {
+            'jackpot': 30.00,    // 30x o valor da aposta
+            'bigWin': 10.00,     // 10x o valor da aposta
+            'smallWin': 2.00,    // 2x o valor da aposta
+            'loss': 0.00         // perde a aposta
+        };
+
+        // VALOR ESPERADO TEÓRICO: (0.005×30 + 0.02×10 + 0.15×2 + 0.825×0) - 1 = -0.325
+        // Isso significa que a cada R$ 1,00 apostado, o jogador perde em média R$ 0,325
+
+        const symbols = ['🐯', '🍒', '⭐', '🍋', '💎', '7️⃣'];
+
+        // Inicializar gráfico
+        const ctx = document.getElementById('resultsChart').getContext('2d');
+        const resultsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Início'],
+                datasets: [{
+                    label: 'Saldo do Jogador (R$)',
+                    data: [100],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.1,
+                    fill: true
+                }, {
+                    label: 'Tendência Teórica',
+                    data: [100],
+                    borderColor: '#ef4444',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Saldo (R$)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Número de Jogadas'
+                        }
+                    }
+                }
+            }
+        });
+
+        function getRandomSymbol() {
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
+        function calculateResult() {
+            const random = Math.random();
+            let resultType = 'loss';
+
+            if (random < probabilities.jackpot) {
+                resultType = 'jackpot';
+            } else if (random < probabilities.jackpot + probabilities.bigWin) {
+                resultType = 'bigWin';
+            } else if (random < probabilities.jackpot + probabilities.bigWin + probabilities.smallWin) {
+                resultType = 'smallWin';
+            }
+
+            return {
+                type: resultType,
+                payout: payouts[resultType],
+                symbols: [
+                    resultType === 'jackpot' ? '🐯' : getRandomSymbol(),
+                    resultType === 'jackpot' || resultType === 'bigWin' ? '🐯' : getRandomSymbol(),
+                    getRandomSymbol()
+                ]
+            };
+        }
+
+        function updateReels(symbols) {
+            document.getElementById('reel1').textContent = symbols[0];
+            document.getElementById('reel2').textContent = symbols[1];
+            document.getElementById('reel3').textContent = symbols[2];
+        }
+
+        function addLogEntry(message, type = 'info') {
+            const log = document.getElementById('observationLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            if (type === 'win') {
+                entry.innerHTML = `<span style="color: var(--success)">✅ ${message}</span>`;
+            } else if (type === 'loss') {
+                entry.innerHTML = `<span style="color: var(--danger)">❌ ${message}</span>`;
+            } else {
+                entry.textContent = `▶️ ${message}`;
+            }
+            
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            
+            // Manter apenas as últimas 20 entradas
+            while (log.children.length > 20) {
+                log.removeChild(log.firstChild);
+            }
+        }
+
+        function updateStats() {
+            const balanceElement = document.getElementById('balance');
+            balanceElement.textContent = `R$ ${balance.toFixed(2)}`;
+            balanceElement.className = `metric-value ${balance >= 100 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('totalPlays').textContent = totalPlays;
+            
+            const balanceChange = totalPlays > 0 ? (balance - 100) / totalPlays : 0;
+            const balancePerPlayElement = document.getElementById('balancePerPlay');
+            balancePerPlayElement.textContent = `R$ ${balanceChange.toFixed(3)}`;
+            balancePerPlayElement.className = `metric-value ${balanceChange >= 0 ? 'positive' : 'negative'}`;
+            
+            const efficiency = ((balance / 100) * 100).toFixed(1);
+            const efficiencyElement = document.getElementById('efficiency');
+            efficiencyElement.textContent = `${efficiency}%`;
+            efficiencyElement.className = `metric-value ${efficiency >= 100 ? 'positive' : 'negative'}`;
+        }
+
+        function updateChart() {
+            // Atualizar linha do saldo real
+            resultsChart.data.labels = playHistory;
+            resultsChart.data.datasets[0].data = balanceHistory;
+            
+            // Atualizar linha da tendência teórica (começa em 100 e cai -0.325 por jogada)
+            const theoreticalData = playHistory.map(plays => {
+                return 100 + (plays * -0.325);
+            });
+            resultsChart.data.datasets[1].data = theoreticalData;
+            
+            resultsChart.update();
+        }
+
+        function playSingle() {
+            playGame(1);
+        }
+
+        function playMultiple(times) {
+            // Desabilitar botões durante jogadas múltiplas
+            const buttons = document.querySelectorAll('.btn-lab');
+            buttons.forEach(btn => btn.disabled = true);
+
+            let plays = 0;
+            const interval = setInterval(() => {
+                playGame(1);
+                plays++;
+                
+                if (plays >= times) {
+                    clearInterval(interval);
+                    // Reabilitar botões
+                    buttons.forEach(btn => btn.disabled = false);
+                    addLogEntry(`Concluídos ${times} experimentos em lote. Saldo atual: R$ ${balance.toFixed(2)}`);
+                }
+            }, 50);
+        }
+
+        function playGame(betAmount) {
+            if (balance < betAmount) {
+                addLogEntry('Saldo insuficiente para continuar o experimento!', 'loss');
+                return;
+            }
+
+            // Cobrar a aposta
+            balance -= betAmount;
+            totalPlays++;
+            losses++;
+
+            // Calcular resultado
+            const result = calculateResult();
+            
+            // Pagar prêmio se houver
+            if (result.payout > 0) {
+                balance += result.payout;
+                wins++;
+                losses--; // Corrigir contagem
+                
+                let message = '';
+                if (result.type === 'jackpot') {
+                    message = `JACKPOT! Ganhou R$ ${result.payout.toFixed(2)}`;
+                } else if (result.type === 'bigWin') {
+                    message = `Grande prêmio! Ganhou R$ ${result.payout.toFixed(2)}`;
+                } else {
+                    message = `Prêmio pequeno: R$ ${result.payout.toFixed(2)}`;
+                }
+                addLogEntry(message, 'win');
+            } else {
+                addLogEntry(`Perdeu R$ ${betAmount.toFixed(2)}`, 'loss');
+            }
+
+            // Atualizar interface
+            updateReels(result.symbols);
+            updateStats();
+
+            // Atualizar histórico para o gráfico (amostragem para performance)
+            if (totalPlays % Math.max(1, Math.floor(totalPlays / 50)) === 0 || balanceHistory.length < 50) {
+                balanceHistory.push(balance);
+                playHistory.push(totalPlays);
+                updateChart();
+            }
+        }
+
+        function resetGame() {
+            balance = 100.00;
+            totalPlays = 0;
+            wins = 0;
+            losses = 0;
+            balanceHistory = [100];
+            playHistory = [0];
+            
+            updateReels(['🎲', '🎲', '🎲']);
+            updateStats();
+            updateChart();
+            
+            // Limpar log
+            const log = document.getElementById('observationLog');
+            log.innerHTML = '<div class="log-entry">▶️ Experimento reiniciado. Execute algumas jogadas para coletar dados...</div>';
+        }
+
+        // Inicializar
+        updateStats();
+    </script>
+</body>
+</html>
