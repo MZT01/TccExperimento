@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório de Probabilidade</title>
+    <title>CDV Lab - Laboratório de Probabilidade</title>
     <style>
         :root {
-            --primary: #3b82f6;
-            --secondary: #1d4ed8;
-            --accent: #8b5cf6;
-            --background: #f1f5f9;
+            --primary: #0d47a1; /* Azul CDV */
+            --secondary: #ffc107; /* Amarelo CDV */
+            --accent: #1565c0;
+            --background: #f5f5f5;
             --card: #ffffff;
-            --text: #1e293b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --text: #212121;
+            --success: #2e7d32;
+            --danger: #c62828;
+            --warning: #ff8f00;
+            --animation-speed: 0.5s;
         }
 
         * {
@@ -24,12 +25,13 @@
         }
 
         body {
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--background);
             min-height: 100vh;
             padding: 20px;
             color: var(--text);
             line-height: 1.6;
+            background-image: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
         }
 
         .container {
@@ -37,7 +39,7 @@
             margin: 0 auto;
         }
 
-        .lab-header {
+        .cdv-header {
             text-align: center;
             margin-bottom: 40px;
             padding: 30px;
@@ -45,19 +47,41 @@
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             border-left: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), #1565c0);
+            color: white;
+        }
+
+        .cdv-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .lab-title {
             font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 10px;
-            color: var(--primary);
+            color: white;
         }
 
         .lab-subtitle {
             font-size: 1.1rem;
-            opacity: 0.8;
-            margin-bottom: 20px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .tcc-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
         }
 
         .experiment-grid {
@@ -78,6 +102,7 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--primary);
         }
 
         .panel-title {
@@ -95,6 +120,8 @@
             padding: 25px;
             border-radius: 12px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .probability-display {
@@ -113,8 +140,20 @@
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            border: 2px solid var(--accent);
+            border: 2px solid var(--secondary);
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reel-spinning {
+            animation: spinReel 0.8s ease-in-out;
+        }
+
+        @keyframes spinReel {
+            0% { transform: translateY(-100%); opacity: 0; }
+            70% { transform: translateY(10%); }
+            100% { transform: translateY(0); opacity: 1; }
         }
 
         .control-panel {
@@ -134,11 +173,27 @@
             transition: all 0.3s ease;
             background: var(--primary);
             color: white;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-lab:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 6px 15px rgba(13, 71, 161, 0.4);
+        }
+
+        .btn-lab:active {
+            transform: translateY(0);
+        }
+
+        .btn-press {
+            animation: buttonPress 0.2s ease;
+        }
+
+        @keyframes buttonPress {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
         }
 
         .data-panel {
@@ -170,7 +225,7 @@
         }
 
         .hypothesis-box {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             padding: 20px;
             border-radius: 10px;
             border-left: 4px solid var(--warning);
@@ -190,6 +245,15 @@
             padding: 8px 0;
             border-bottom: 1px solid #e2e8f0;
             font-size: 0.9rem;
+        }
+
+        .log-entry-new {
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         .theory-panel {
@@ -234,21 +298,185 @@
 
         .positive { color: var(--success); }
         .negative { color: var(--danger); }
+
+        /* Botão de controle de animações */
+        .animation-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            color: var(--primary);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Animações quando ativadas */
+        body.animations-enabled .lab-title:hover {
+            transform: translateY(-5px);
+        }
+
+        body.animations-enabled .lab-subtitle:hover {
+            transform: translateY(-3px);
+        }
+
+        body.animations-enabled .experiment-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        body.animations-enabled .metric-card:hover {
+            transform: scale(1.03);
+        }
+
+        body.animations-enabled .hypothesis-box:hover {
+            transform: translateX(5px);
+        }
+
+        body.animations-enabled .concept-card:hover {
+            transform: scale(1.03);
+        }
+
+        body.animations-enabled .formula:hover {
+            transform: scale(1.02);
+        }
+
+        /* Efeito de partículas para jackpot */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        @keyframes particle-explosion {
+            0% { transform: translate(0, 0) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+        }
+
+        /* Elementos temáticos do CDV */
+        .cdv-badge {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .cdv-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .cdv-watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
-        <div class="lab-header">
+        <div class="cdv-header">
+            <div class="cdv-logo">
+                <span>CDV</span> • Colégio de Vinhedo
+            </div>
             <h1 class="lab-title">🔬 Laboratório de Probabilidade Aplicada</h1>
-            <p class="lab-subtitle">Experimento. Lei dos Grandes Números em tempo real</p>
+            <p class="lab-subtitle">Trabalho de Conclusão de Curso - Matemática Aplicada</p>
+            <div class="tcc-info">
+                <strong>Tema:</strong> Análise Experimental da Lei dos Grandes Números em Jogos de Azar
+            </div>
+            
+            <!-- Controle de animações -->
+            <div class="animation-control">
+                <span>Animações</span>
+                <label class="switch">
+                    <input type="checkbox" id="animationToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
 
         <div class="experiment-grid">
             <div class="experiment-panel">
-                <div class="panel-title">🧪 Interface Experimental</div>
+                <div class="panel-title">🧪 Interface Experimental <span class="cdv-badge">CDV Lab</span></div>
                 <div class="simulation-interface">
-                    <div style="color: white; margin-bottom: 20px;">Simulador de Máquina Caça-Níqueis</div>
+                    <div style="color: white; margin-bottom: 20px;">Simulador de Probabilidades - CDV Math Lab</div>
                     
                     <div class="probability-display">
                         <div class="probability-reel" id="reel1">🎲</div>
@@ -276,7 +504,7 @@
             </div>
 
             <div class="experiment-panel data-panel">
-                <div class="panel-title">📊 Métricas do Experimento</div>
+                <div class="panel-title">📊 Métricas do Experimento <span class="cdv-badge">Análise</span></div>
                 
                 <div class="metrics-grid">
                     <div class="metric-card">
@@ -308,17 +536,19 @@
         </div>
 
         <div class="theory-panel">
-            <div class="panel-title">📚 Fundamentos Teóricos</div>
+            <div class="panel-title">📚 Fundamentos Teóricos <span class="cdv-badge">Matemática</span></div>
             <div class="theory-grid">
                 <div class="concept-card">
                     <div class="concept-title">Lei dos Grandes Números</div>
                     <p>À medida que o número de experimentos aumenta, a média dos resultados observados converge para o valor esperado teórico.</p>
                     <div class="formula">lim[n→∞] (Sₙ/n) = μ</div>
+                    <p><strong>Aplicação no TCC:</strong> Esta lei fundamenta a análise de jogos de azar e sistemas probabilísticos.</p>
                 </div>
                 <div class="concept-card">
                     <div class="concept-title">Valor Esperado (VE)</div>
                     <p>Média ponderada de todos os resultados possíveis, considerando suas probabilidades.</p>
                     <div class="formula">E[X] = Σ [xᵢ × P(xᵢ)]</div>
+                    <p><strong>Aplicação no TCC:</strong> O VE negativo explica por que cassinos são lucrativos no longo prazo.</p>
                 </div>
                 <div class="concept-card">
                     <div class="concept-title">Probabilidades Configuradas</div>
@@ -329,9 +559,19 @@
                         <li>Prejuízo: 82.5% (perde aposta)</li>
                     </ul>
                     <div class="formula">VE = (0.005×30 + 0.02×10 + 0.15×2 + 0.825×0) - 1 = -0.325</div>
+                    <p><strong>Interpretação:</strong> Para cada R$ 1,00 apostado, perde-se R$ 0,325 em média.</p>
                 </div>
             </div>
         </div>
+
+        <div class="cdv-footer">
+            <p>Colégio CDV - Vinhedo • Trabalho de Conclusão de Curso - Matemática Aplicada</p>
+            <p>Desenvolvido como ferramenta educacional para demonstração de conceitos probabilísticos</p>
+        </div>
+    </div>
+
+    <div class="cdv-watermark">
+        CDV Lab • TCC Matemática
     </div>
 
     <script>
@@ -342,6 +582,7 @@
         let losses = 0;
         let balanceHistory = [100];
         let playHistory = [0];
+        let animationsEnabled = true;
 
         // PROBABILIDADES MAIS REALISTAS - Valor Esperado negativo significativo
         const probabilities = {
@@ -361,7 +602,7 @@
         // VALOR ESPERADO TEÓRICO: (0.005×30 + 0.02×10 + 0.15×2 + 0.825×0) - 1 = -0.325
         // Isso significa que a cada R$ 1,00 apostado, o jogador perde em média R$ 0,325
 
-        const symbols = ['🐯', '🍒', '⭐', '🍋', '💎', '7️⃣'];
+        const symbols = ['📚', '🔬', '🧮', '📊', '🎓', '🏫']; // Símbolos temáticos da escola
 
         // Inicializar gráfico
         const ctx = document.getElementById('resultsChart').getContext('2d');
@@ -372,15 +613,15 @@
                 datasets: [{
                     label: 'Saldo do Jogador (R$)',
                     data: [100],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: '#0d47a1',
+                    backgroundColor: 'rgba(13, 71, 161, 0.1)',
                     borderWidth: 3,
                     tension: 0.1,
                     fill: true
                 }, {
                     label: 'Tendência Teórica',
                     data: [100],
-                    borderColor: '#ef4444',
+                    borderColor: '#c62828',
                     borderWidth: 2,
                     borderDash: [5, 5],
                     tension: 0.1,
@@ -407,6 +648,20 @@
             }
         });
 
+        // Controle de animações
+        const animationToggle = document.getElementById('animationToggle');
+        animationToggle.addEventListener('change', function() {
+            animationsEnabled = this.checked;
+            if (animationsEnabled) {
+                document.body.classList.add('animations-enabled');
+            } else {
+                document.body.classList.remove('animations-enabled');
+            }
+        });
+
+        // Inicializar com animações ativadas
+        document.body.classList.add('animations-enabled');
+
         function getRandomSymbol() {
             return symbols[Math.floor(Math.random() * symbols.length)];
         }
@@ -427,23 +682,97 @@
                 type: resultType,
                 payout: payouts[resultType],
                 symbols: [
-                    resultType === 'jackpot' ? '🐯' : getRandomSymbol(),
-                    resultType === 'jackpot' || resultType === 'bigWin' ? '🐯' : getRandomSymbol(),
+                    resultType === 'jackpot' ? '🎓' : getRandomSymbol(),
+                    resultType === 'jackpot' || resultType === 'bigWin' ? '🎓' : getRandomSymbol(),
                     getRandomSymbol()
                 ]
             };
         }
 
-        function updateReels(symbols) {
-            document.getElementById('reel1').textContent = symbols[0];
-            document.getElementById('reel2').textContent = symbols[1];
-            document.getElementById('reel3').textContent = symbols[2];
+        function updateReels(symbols, resultType) {
+            const reels = [
+                document.getElementById('reel1'),
+                document.getElementById('reel2'),
+                document.getElementById('reel3')
+            ];
+
+            // Adicionar efeito de animação nos rolos se as animações estiverem ativadas
+            if (animationsEnabled) {
+                reels.forEach((reel, index) => {
+                    reel.classList.add('reel-spinning');
+                    setTimeout(() => {
+                        reel.textContent = symbols[index];
+                        reel.classList.remove('reel-spinning');
+                    }, 300 + (index * 100));
+                });
+
+                // Efeito especial para jackpot
+                if (resultType === 'jackpot') {
+                    createParticleEffect();
+                }
+            } else {
+                // Sem animação, apenas atualizar os símbolos
+                reels.forEach((reel, index) => {
+                    reel.textContent = symbols[index];
+                });
+            }
+        }
+
+        function createParticleEffect() {
+            const container = document.querySelector('.simulation-interface');
+            const particlesContainer = document.createElement('div');
+            particlesContainer.className = 'particles-container';
+            container.appendChild(particlesContainer);
+
+            // Criar partículas
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Posição aleatória
+                const tx = (Math.random() - 0.5) * 200;
+                const ty = (Math.random() - 0.5) * 200;
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                // Cor aleatória
+                const colors = ['#ffc107', '#ffd54f', '#ffecb3', '#fff8e1'];
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Tamanho aleatório
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posição inicial no centro
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                
+                particlesContainer.appendChild(particle);
+                
+                // Animação
+                particle.style.animation = `particle-explosion 1s ease forwards`;
+                
+                // Remover após a animação
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+            
+            // Remover o container após a animação
+            setTimeout(() => {
+                particlesContainer.remove();
+            }, 1000);
         }
 
         function addLogEntry(message, type = 'info') {
             const log = document.getElementById('observationLog');
             const entry = document.createElement('div');
             entry.className = 'log-entry';
+            
+            if (animationsEnabled) {
+                entry.classList.add('log-entry-new');
+            }
             
             if (type === 'win') {
                 entry.innerHTML = `<span style="color: var(--success)">✅ ${message}</span>`;
@@ -495,10 +824,27 @@
         }
 
         function playSingle() {
+            // Adicionar efeito de pressionar no botão se as animações estiverem ativadas
+            if (animationsEnabled) {
+                const button = event.target;
+                button.classList.add('btn-press');
+                setTimeout(() => {
+                    button.classList.remove('btn-press');
+                }, 200);
+            }
             playGame(1);
         }
 
         function playMultiple(times) {
+            // Adicionar efeito de pressionar no botão se as animações estiverem ativadas
+            if (animationsEnabled) {
+                const button = event.target;
+                button.classList.add('btn-press');
+                setTimeout(() => {
+                    button.classList.remove('btn-press');
+                }, 200);
+            }
+
             // Desabilitar botões durante jogadas múltiplas
             const buttons = document.querySelectorAll('.btn-lab');
             buttons.forEach(btn => btn.disabled = true);
@@ -551,7 +897,7 @@
             }
 
             // Atualizar interface
-            updateReels(result.symbols);
+            updateReels(result.symbols, result.type);
             updateStats();
 
             // Atualizar histórico para o gráfico (amostragem para performance)
@@ -563,6 +909,15 @@
         }
 
         function resetGame() {
+            // Adicionar efeito de pressionar no botão se as animações estiverem ativadas
+            if (animationsEnabled) {
+                const button = event.target;
+                button.classList.add('btn-press');
+                setTimeout(() => {
+                    button.classList.remove('btn-press');
+                }, 200);
+            }
+
             balance = 100.00;
             totalPlays = 0;
             wins = 0;
@@ -570,7 +925,7 @@
             balanceHistory = [100];
             playHistory = [0];
             
-            updateReels(['🎲', '🎲', '🎲']);
+            updateReels(['🎲', '🎲', '🎲'], 'reset');
             updateStats();
             updateChart();
             
