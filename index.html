@@ -447,6 +447,84 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 100;
         }
+
+        /* Seção de créditos */
+        .credits-panel {
+            grid-column: 1 / -1;
+            background: var(--card);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            text-align: center;
+            border-top: 4px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .credits-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .developer-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .developer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .developer-info {
+            text-align: left;
+        }
+
+        .developer-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .developer-role {
+            font-size: 1rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .project-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--background);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-style: italic;
+            color: var(--primary);
+            font-weight: 500;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -564,14 +642,36 @@
             </div>
         </div>
 
+        <!-- Seção de Créditos -->
+        <div class="credits-panel">
+            <h2 class="credits-title">Desenvolvimento do Projeto</h2>
+            
+            <div class="developer-card">
+                <div class="developer-avatar">PM</div>
+                <div class="developer-info">
+                    <div class="developer-name">Pietro Mazetto</div>
+                    <div class="developer-role">Desenvolvedor & Pesquisador</div>
+                </div>
+            </div>
+            
+            <div class="project-info">
+                <p><strong>Projeto desenvolvido como parte do Trabalho de Conclusão de Curso em Matemática Aplicada</strong></p>
+                <p>Este laboratório virtual foi inteiramente concebido, desenvolvido e implementado por Pietro Mazetto como ferramenta educacional para demonstração prática dos conceitos de probabilidade e estatística.</p>
+            </div>
+            
+            <div class="signature">
+                "Criado com dedicação para o Colégio CDV - Vinhedo"
+            </div>
+        </div>
+
         <div class="cdv-footer">
             <p>Colégio CDV - Vinhedo • Trabalho de Conclusão de Curso - Matemática Aplicada</p>
-            <p>Desenvolvido como ferramenta educacional para demonstração de conceitos probabilísticos</p>
+            <p>Desenvolvido por Pietro Mazetto como ferramenta educacional para demonstração de conceitos probabilísticos</p>
         </div>
     </div>
 
     <div class="cdv-watermark">
-        CDV Lab • TCC Matemática
+        Desenvolvido por Pietro Mazetto
     </div>
 
     <script>
