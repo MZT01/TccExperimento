@@ -28,10 +28,149 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--background);
             min-height: 100vh;
-            padding: 20px;
             color: var(--text);
             line-height: 1.6;
-            background-image: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+            overflow-x: hidden;
+        }
+
+        /* Tela de Splash */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), #0a3a8a);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .splash-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .splash-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        .splash-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+
+        .splash-credits {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            max-width: 500px;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.5s forwards;
+        }
+
+        .developer-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .developer-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .developer-text {
+            text-align: left;
+        }
+
+        .developer-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .developer-role {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .splash-loading {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            margin: 30px auto;
+            animation: spin 1s linear infinite;
+            opacity: 0;
+            animation: spin 1s linear infinite, fadeIn 1s ease 2s forwards;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .splash-instruction {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            opacity: 0;
+            animation: fadeIn 1s ease 2.5s forwards;
+        }
+
+        /* Conteúdo principal (inicialmente oculto) */
+        .main-content {
+            display: none;
+            padding: 20px;
         }
 
         .container {
@@ -481,19 +620,6 @@
             border-left: 4px solid var(--primary);
         }
 
-        .developer-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
         .developer-info {
             text-align: left;
         }
@@ -529,152 +655,190 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="cdv-header">
-            <div class="cdv-logo">
-                <span>CDV</span> • Colégio de Vinhedo
-            </div>
-            <h1 class="lab-title">🔬 Laboratório de Probabilidade Aplicada</h1>
-            <p class="lab-subtitle">Trabalho de Conclusão de Curso - Matemática Aplicada</p>
-            <div class="tcc-info">
-                <strong></strong> Análise Experimental da Lei dos Grandes Números em Jogos de Azar
-            </div>
-            
-            <!-- Controle de animações -->
-            <div class="animation-control">
-                <span>Animações</span>
-                <label class="switch">
-                    <input type="checkbox" id="animationToggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="experiment-grid">
-            <div class="experiment-panel">
-                <div class="panel-title">🧪 Interface Experimental <span class="cdv-badge">CDV Lab</span></div>
-                <div class="simulation-interface">
-                    <div style="color: white; margin-bottom: 20px;">Simulador de Probabilidades - CDV Math Lab</div>
-                    
-                    <div class="probability-display">
-                        <div class="probability-reel" id="reel1">🎲</div>
-                        <div class="probability-reel" id="reel2">🎲</div>
-                        <div class="probability-reel" id="reel3">🎲</div>
-                    </div>
-
-                    <div class="control-panel">
-                        <button class="btn-lab" onclick="playSingle()">1 Experimento</button>
-                        <button class="btn-lab" onclick="playMultiple(10)">10 Experimentos</button>
-                        <button class="btn-lab" onclick="playMultiple(100)">100 Experimentos</button>
-                        <button class="btn-lab" onclick="resetGame()">Reiniciar</button>
-                    </div>
-                </div>
-
-                <div class="analysis-section">
-                    <div class="hypothesis-box">
-                        <strong>Hipótese Científica:</strong> O Valor Esperado negativo se manifestará através da Lei dos Grandes Números após repetições suficientes do experimento.
-                    </div>
-
-                    <div class="observation-log" id="observationLog">
-                        <div class="log-entry">▶️ Experimento iniciado. Execute algumas jogadas para coletar dados...</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="experiment-panel data-panel">
-                <div class="panel-title">📊 Métricas do Experimento <span class="cdv-badge">Análise</span></div>
-                
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div>Saldo do Pesquisador</div>
-                        <div class="metric-value" id="balance">R$ 100,00</div>
-                        <small>Recursos disponíveis</small>
-                    </div>
-                    <div class="metric-card">
-                        <div>Iterações</div>
-                        <div class="metric-value" id="totalPlays">0</div>
-                        <small>Número de experimentos</small>
-                    </div>
-                    <div class="metric-card">
-                        <div>Valor Esperado Real</div>
-                        <div class="metric-value" id="balancePerPlay">R$ 0,00</div>
-                        <small>Média por experimento</small>
-                    </div>
-                    <div class="metric-card">
-                        <div>Eficiência</div>
-                        <div class="metric-value" id="efficiency">0%</div>
-                        <small>Desempenho vs. Teórico</small>
-                    </div>
-                </div>
-
-                <div style="margin-top: 20px;">
-                    <canvas id="resultsChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="theory-panel">
-            <div class="panel-title">📚 Fundamentos Teóricos <span class="cdv-badge">Matemática</span></div>
-            <div class="theory-grid">
-                <div class="concept-card">
-                    <div class="concept-title">Lei dos Grandes Números</div>
-                    <p>À medida que o número de experimentos aumenta, a média dos resultados observados converge para o valor esperado teórico.</p>
-                    <div class="formula">lim[n→∞] (Sₙ/n) = μ</div>
-                    <p><strong>Aplicação no TCC:</strong> Esta lei fundamenta a análise de jogos de azar e sistemas probabilísticos.</p>
-                </div>
-                <div class="concept-card">
-                    <div class="concept-title">Valor Esperado (VE)</div>
-                    <p>Média ponderada de todos os resultados possíveis, considerando suas probabilidades.</p>
-                    <div class="formula">E[X] = Σ [xᵢ × P(xᵢ)]</div>
-                    <p><strong>Aplicação no TCC:</strong> O VE negativo explica por que cassinos são lucrativos no longo prazo.</p>
-                </div>
-                <div class="concept-card">
-                    <div class="concept-title">Probabilidades Configuradas</div>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li>Jackpot: 0.5% (30× prêmio)</li>
-                        <li>Vitória Grande: 2% (10× prêmio)</li>
-                        <li>Vitória Pequena: 15% (2× prêmio)</li>
-                        <li>Prejuízo: 82.5% (perde aposta)</li>
-                    </ul>
-                    <div class="formula">VE = (0.005×30 + 0.02×10 + 0.15×2 + 0.825×0) - 1 = -0.325</div>
-                    <p><strong>Interpretação:</strong> Para cada R$ 1,00 apostado, perde-se R$ 0,325 em média.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Seção de Créditos -->
-        <div class="credits-panel">
-            <h2 class="credits-title">Desenvolvimento do Projeto</h2>
-            
-            <div class="developer-card">
+    <!-- Tela de Splash -->
+    <div id="splashScreen">
+        <div class="splash-logo">🔬</div>
+        <h1 class="splash-title">CDV Lab</h1>
+        <p class="splash-subtitle">Laboratório de Probabilidade Aplicada</p>
+        
+        <div class="splash-credits">
+            <div class="developer-info">
                 <div class="developer-avatar">PM</div>
-                <div class="developer-info">
+                <div class="developer-text">
                     <div class="developer-name">Pietro Mazetto</div>
                     <div class="developer-role">Desenvolvedor & Pesquisador</div>
                 </div>
             </div>
-            
-            <div class="project-info">
-                <p><strong>Projeto desenvolvido como parte do Trabalho de Conclusão de Curso em Matemática Aplicada</strong></p>
-                <p>Este laboratório virtual foi inteiramente concebido, desenvolvido e implementado por Pietro Mazetto como ferramenta educacional para demonstração prática dos conceitos de probabilidade e estatística.</p>
-            </div>
-            
-            <div class="signature">
-                "Criado com dedicação para o Colégio CDV - Vinhedo"
-            </div>
+            <p>Trabalho de Conclusão de Curso - Matemática Aplicada</p>
+            <p>Colégio CDV - Vinhedo</p>
         </div>
-
-        <div class="cdv-footer">
-            <p>Colégio CDV - Vinhedo • Trabalho de Conclusão de Curso - Matemática Aplicada</p>
-            <p>Desenvolvido por Pietro Mazetto como ferramenta educacional para demonstração de conceitos probabilísticos</p>
-        </div>
+        
+        <div class="splash-loading"></div>
+        <p class="splash-instruction">Carregando experiência interativa...</p>
     </div>
 
-    <div class="cdv-watermark">
-        Desenvolvido por Pietro Mazetto
+    <!-- Conteúdo Principal (inicialmente oculto) -->
+    <div class="main-content">
+        <div class="container">
+            <div class="cdv-header">
+                <div class="cdv-logo">
+                    <span>CDV</span> • Colégio de Vinhedo
+                </div>
+                <h1 class="lab-title">🔬 Laboratório de Probabilidade Aplicada</h1>
+                <p class="lab-subtitle">Trabalho de Conclusão de Curso - Matemática Aplicada</p>
+                <div class="tcc-info">
+                    <strong>Tema:</strong> Análise Experimental da Lei dos Grandes Números em Jogos de Azar
+                </div>
+                
+                <!-- Controle de animações -->
+                <div class="animation-control">
+                    <span>Animações</span>
+                    <label class="switch">
+                        <input type="checkbox" id="animationToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="experiment-grid">
+                <div class="experiment-panel">
+                    <div class="panel-title">🧪 Interface Experimental <span class="cdv-badge">CDV Lab</span></div>
+                    <div class="simulation-interface">
+                        <div style="color: white; margin-bottom: 20px;">Simulador de Probabilidades - CDV Math Lab</div>
+                        
+                        <div class="probability-display">
+                            <div class="probability-reel" id="reel1">🎲</div>
+                            <div class="probability-reel" id="reel2">🎲</div>
+                            <div class="probability-reel" id="reel3">🎲</div>
+                        </div>
+
+                        <div class="control-panel">
+                            <button class="btn-lab" onclick="playSingle()">1 Experimento</button>
+                            <button class="btn-lab" onclick="playMultiple(10)">10 Experimentos</button>
+                            <button class="btn-lab" onclick="playMultiple(100)">100 Experimentos</button>
+                            <button class="btn-lab" onclick="resetGame()">Reiniciar</button>
+                        </div>
+                    </div>
+
+                    <div class="analysis-section">
+                        <div class="hypothesis-box">
+                            <strong>Hipótese Científica:</strong> O Valor Esperado negativo se manifestará através da Lei dos Grandes Números após repetições suficientes do experimento.
+                        </div>
+
+                        <div class="observation-log" id="observationLog">
+                            <div class="log-entry">▶️ Experimento iniciado. Execute algumas jogadas para coletar dados...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experiment-panel data-panel">
+                    <div class="panel-title">📊 Métricas do Experimento <span class="cdv-badge">Análise</span></div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div>Saldo do Pesquisador</div>
+                            <div class="metric-value" id="balance">R$ 100,00</div>
+                            <small>Recursos disponíveis</small>
+                        </div>
+                        <div class="metric-card">
+                            <div>Iterações</div>
+                            <div class="metric-value" id="totalPlays">0</div>
+                            <small>Número de experimentos</small>
+                        </div>
+                        <div class="metric-card">
+                            <div>Valor Esperado Real</div>
+                            <div class="metric-value" id="balancePerPlay">R$ 0,00</div>
+                            <small>Média por experimento</small>
+                        </div>
+                        <div class="metric-card">
+                            <div>Eficiência</div>
+                            <div class="metric-value" id="efficiency">0%</div>
+                            <small>Desempenho vs. Teórico</small>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <canvas id="resultsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="theory-panel">
+                <div class="panel-title">📚 Fundamentos Teóricos <span class="cdv-badge">Matemática</span></div>
+                <div class="theory-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">Lei dos Grandes Números</div>
+                        <p>À medida que o número de experimentos aumenta, a média dos resultados observados converge para o valor esperado teórico.</p>
+                        <div class="formula">lim[n→∞] (Sₙ/n) = μ</div>
+                        <p><strong>Aplicação no TCC:</strong> Esta lei fundamenta a análise de jogos de azar e sistemas probabilísticos.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-title">Valor Esperado (VE)</div>
+                        <p>Média ponderada de todos os resultados possíveis, considerando suas probabilidades.</p>
+                        <div class="formula">E[X] = Σ [xᵢ × P(xᵢ)]</div>
+                        <p><strong>Aplicação no TCC:</strong> O VE negativo explica por que cassinos são lucrativos no longo prazo.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-title">Probabilidades Configuradas</div>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Jackpot: 0.5% (30× prêmio)</li>
+                            <li>Vitória Grande: 2% (10× prêmio)</li>
+                            <li>Vitória Pequena: 15% (2× prêmio)</li>
+                            <li>Prejuízo: 82.5% (perde aposta)</li>
+                        </ul>
+                        <div class="formula">VE = (0.005×30 + 0.02×10 + 0.15×2 + 0.825×0) - 1 = -0.325</div>
+                        <p><strong>Interpretação:</strong> Para cada R$ 1,00 apostado, perde-se R$ 0,325 em média.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Créditos -->
+            <div class="credits-panel">
+                <h2 class="credits-title">Desenvolvimento do Projeto</h2>
+                
+                <div class="developer-card">
+                    <div class="developer-avatar">PM</div>
+                    <div class="developer-info">
+                        <div class="developer-name">Pietro Mazetto</div>
+                        <div class="developer-role">Desenvolvedor & Pesquisador</div>
+                    </div>
+                </div>
+                
+                <div class="project-info">
+                    <p><strong>Projeto desenvolvido como parte do Trabalho de Conclusão de Curso em Matemática Aplicada</strong></p>
+                    <p>Este laboratório virtual foi inteiramente concebido, desenvolvido e implementado por Pietro Mazetto como ferramenta educacional para demonstração prática dos conceitos de probabilidade e estatística.</p>
+                </div>
+                
+                <div class="signature">
+                    "Criado com dedicação para o Colégio CDV - Vinhedo"
+                </div>
+            </div>
+
+            <div class="cdv-footer">
+                <p>Colégio CDV - Vinhedo • Trabalho de Conclusão de Curso - Matemática Aplicada</p>
+                <p>Desenvolvido por Pietro Mazetto como ferramenta educacional para demonstração de conceitos probabilísticos</p>
+            </div>
+        </div>
+
+        <div class="cdv-watermark">
+            Desenvolvido por Pietro Mazetto
+        </div>
     </div>
 
     <script>
+        // Configuração da tela de splash
+        window.addEventListener('load', function() {
+            // Mostrar a tela de splash por 4 segundos e depois esconder
+            setTimeout(function() {
+                const splashScreen = document.getElementById('splashScreen');
+                splashScreen.style.opacity = '0';
+                splashScreen.style.visibility = 'hidden';
+                
+                // Mostrar o conteúdo principal
+                document.querySelector('.main-content').style.display = 'block';
+            }, 4000);
+        });
+
         // Configuração inicial - PROBABILIDADES MAIS REALISTAS
         let balance = 100.00;
         let totalPlays = 0;
